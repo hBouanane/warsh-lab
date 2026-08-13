@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "warsh-lab"
+version = "0.1.0"
+description = "Text normalisation, speaker-safe splits, and diagnostic scoring for Warsh Quran recitation ASR"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "hBouanane" }]
+keywords = ["quran", "warsh", "asr", "speech-recognition", "arabic", "tajweed"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Text Processing :: Linguistic",
+]
+
+# No runtime dependencies, on purpose: this has to import on a training box
+# with no wheels installed and no network.
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+warsh = "warshlab.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+warshlab = ["data/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

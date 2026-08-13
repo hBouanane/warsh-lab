@@ -1,0 +1,26 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+.venv/
+venv/
+env/
+
+# Command output directories
+demo_out/
+integration_out/
+out/
+output/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

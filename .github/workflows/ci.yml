@@ -1,0 +1,45 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.9", "3.12"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+
+      - name: Test
+        run: python -m pytest -q
+
+      # The self-test and the demo are the real integration check: they exercise
+      # every module end to end and must work with no network and no dataset.
+      - name: Self-test
+        run: warsh doctor
+
+      - name: Demo pipeline
+        run: warsh demo --out-dir ci_out
+
+      - name: Report was written
+        shell: python
+        run: |
+          from pathlib import Path
+          html = Path("ci_out/report.html").read_text(encoding="utf-8")
+          assert html.startswith("<!doctype html>"), "report is not a full document"
+          assert "https://" not in html, "report is not self-contained"
+          print(f"report ok, {len(html):,} bytes")
